@@ -25,6 +25,10 @@ class Book
     #[ORM\Column(type: Types::TEXT)]
     private ?string $text = null;
 
+    #[ORM\ManyToOne(inversedBy: 'books')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $cetegory = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -62,6 +66,18 @@ class Book
     public function setText(string $text): static
     {
         $this->text = $text;
+
+        return $this;
+    }
+
+    public function getCetegory(): ?Category
+    {
+        return $this->cetegory;
+    }
+
+    public function setCetegory(?Category $cetegory): static
+    {
+        $this->cetegory = $cetegory;
 
         return $this;
     }
