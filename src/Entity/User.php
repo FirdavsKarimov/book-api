@@ -11,7 +11,11 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
+use App\Component\User\FullNameDto;
+use App\Component\User\QoshimchaMalumotlarDto;
 use App\Controller\UserCreateAction;
+use App\Controller\UserFullNameAction;
+use App\Controller\UserQoshimchaMalumotlarAction;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -31,6 +35,18 @@ use Symfony\Component\Validator\Constraints as Assert;
             controller: UserCreateAction::class,
             name: 'createUser'
         ),
+        new Post(
+            uriTemplate: 'users/full-name',
+            controller: UserFullNameAction::class,
+            input: FullNameDto::class,
+            name: 'fullName'
+        ),
+        new Post(
+            uriTemplate: 'users/qoshimcha-malumotlar',
+            controller: UserQoshimchaMalumotlarAction::class,
+            input: QoshimchaMalumotlarDto::class,
+            name: 'qoshimchaMalumotlar'
+        )
     ],
     normalizationContext: ['groups' => ['user:read']],
     denormalizationContext: ['groups' => ['user:write']],
