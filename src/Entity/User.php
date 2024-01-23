@@ -16,6 +16,7 @@ use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -31,8 +32,8 @@ use Symfony\Component\Validator\Constraints as Assert;
             name: 'createUser'
         ),
     ],
-    normalizationContext: ['groups' =>['user:read']],
-    denormalizationContext: ['groups' =>['user:write']],
+    normalizationContext: ['groups' => ['user:read']],
+    denormalizationContext: ['groups' => ['user:write']],
     paginationItemsPerPage: 10
 )]
 #[UniqueEntity('email', message: "Bu {{value}} email bazada mavjud!")]
@@ -43,8 +44,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 ])]
 #[ApiFilter(OrderFilter::class, properties: ['id'])]
 #[ApiFilter(DateFilter::class, properties: ['createdAt'])]
-
-class User
+class User implements PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -61,11 +61,11 @@ class User
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Parolni to'g'ri tering!")]
     #[Groups(['user:write'])]
-    private ?string $pasword = null;
+    private ?string $password = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     #[Assert\NotBlank]
-    #[Assert\Range(min:18, max:45)]
+    #[Assert\Range(min: 18, max: 45)]
     #[Groups(['user:read', 'user:write'])]
     private ?int $age = null;
 
@@ -87,7 +87,7 @@ class User
     private array $roles = ["ROLE_USER"];
 
     #[ORM\Column]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     public function getId(): ?int
@@ -107,14 +107,14 @@ class User
         return $this;
     }
 
-    public function getPasword(): ?string
+    public function getPassword(): ?string
     {
-        return $this->pasword;
+        return $this->password;
     }
 
-    public function setPasword(string $pasword): static
+    public function setPassword(string $password): static
     {
-        $this->pasword = $pasword;
+        $this->password = $password;
 
         return $this;
     }
