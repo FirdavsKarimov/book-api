@@ -8,6 +8,8 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\GetBooksByCategoryAction;
+use App\Controller\GetBooksHardExampleAction;
 use App\Repository\BookRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,6 +18,27 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 #[ApiResource(
     operations: [
+        new GetCollection(
+            uriTemplate: 'book/by-category',
+            controller: GetBooksByCategoryAction::class,
+            openapiContext: [
+                'parameters' => [
+                    [
+                        'in' => 'query',
+                        'name' => 'categoryId',
+                        'schema' => [
+                            'type' => 'integer'
+                        ]
+                    ]
+                ]
+            ],
+            name: 'getBooks'
+        ),
+        new GetCollection(
+            uriTemplate: 'book/hard-example',
+            controller: GetBooksHardExampleAction::class,
+            name: 'booksHardExample'
+        ),
         new GetCollection(),
         new Post(),
         new Put(),

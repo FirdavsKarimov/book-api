@@ -21,6 +21,43 @@ class BookRepository extends ServiceEntityRepository
         parent::__construct($registry, Book::class);
     }
 
+
+    public function findBookExample(int $userId):array
+    {
+        return $this->createQueryBuilder('b')
+            ->select(
+                'b.id',
+                'b.name',
+                'bc.name as categoryName',
+                'bi.id as imageId',
+                'bi.filePath',
+                'u.email',
+                'u.phone'
+            )
+            ->leftJoin('b.category', 'bc')
+            ->innerJoin('b.image', 'bi')
+            ->join(User::class, 'u')
+            ->andWhere('u.id = :val')
+            ->setParameter('val', $userId)
+            ->orderBy('b.id', 'DESC')
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getResult()
+        ;
+
+    }
+
+    public function findOneBookExample(string $text): ?Book
+    {
+        return  $this->createQueryBuilder('b')
+            ->andWhere('b.text like :val')
+            ->setParameter('val', '%'. $text . '%')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
 //    /**
 //     * @return Book[] Returns an array of Book objects
 //     */

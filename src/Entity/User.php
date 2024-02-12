@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Component\User\FullNameDto;
 use App\Component\User\QoshimchaMalumotlarDto;
+use App\Controller\AboutMeAction;
 use App\Controller\UserCreateAction;
 use App\Controller\UserFullNameAction;
 use App\Controller\UserQoshimchaMalumotlarAction;
@@ -30,6 +31,14 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new GetCollection(
             security: "is_granted('ROLE_ADMIN')"
+        ),
+        new GetCollection(
+            uriTemplate: 'users/about_me',
+            controller: AboutMeAction::class,
+            name: 'aboutMe'
+        ),
+        new Get(
+            security: "is_granted('Role_Admin') || object == user"
         ),
         new Get(),
         new Delete(),
